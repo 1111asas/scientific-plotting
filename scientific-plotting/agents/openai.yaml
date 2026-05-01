@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scientific Plotting"
+  short_description: "通用科研绘图脚本、版式统一、数据追溯和投稿前检查流程"
+  default_prompt: "Use $scientific-plotting to create a reproducible manuscript-style scientific figure from my data."
