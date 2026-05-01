@@ -30,6 +30,12 @@ description: Use when creating, revising, standardizing, or auditing scientific 
 5. 写一个短说明：说明数据来源、处理步骤、单位变换、归一化、误差条含义和输出文件。
 6. 最后做图像检查：文件是否生成、分辨率是否足够、文字是否重叠、坐标单位是否完整、图例是否遮挡数据。
 
+## Bundled Resources
+
+- `scripts/plot_template.py`: copy or adapt this when starting a new matplotlib figure. It includes font fallback, journal-style axes, multi-format export, metadata sidecar output, and a built-in demo dataset.
+- `scripts/audit_figure.py`: run this on generated `png/pdf/svg` files for quick checks on file existence, dimensions, extension, and likely raster resolution issues.
+- `references/advanced-recipes.md`: load this when the task involves multi-panel figures, literature/digitized benchmark comparisons, transition matrices, stacked composition bars, or final-archive figure packages.
+
 ## 默认画图规范
 
 优先使用白底、黑色坐标轴、浅灰网格和有限配色。不要使用彩虹色、3D 柱状图、过度阴影、无意义渐变背景。
@@ -78,7 +84,7 @@ COLORS = {
 
 ## 脚本模板
 
-新建绘图脚本时默认采用这个结构，按任务删改：
+新建绘图脚本时优先复制 `scripts/plot_template.py`，再按任务删改。若只需要很小的一次性脚本，也可以采用下面的最小结构：
 
 ```python
 #!/usr/bin/env python3
@@ -150,6 +156,13 @@ if __name__ == "__main__":
 - `heatmap`：矩阵、转移概率、相关系数；色条必须有标签和单位。
 - `multi-panel`：不同指标服务同一科学问题时使用；共享坐标能减少视觉负担。
 
+复杂图型先查 `references/advanced-recipes.md`，尤其是：
+
+- 多面板图：统一 panel 标签、共享轴、固定 `subplots_adjust`。
+- 文献对比图：本研究数据和 digitized benchmark 分开读入，明确归一化和插值。
+- 矩阵图：矩阵数值直接写在格子里，色条写单位。
+- 组成图：分数和为 1 时优先 horizontal stacked bar，类别标签写在色块内。
+
 避免：
 
 - 除非有强理由，不使用双 y 轴；更推荐上下两个 panel。
@@ -175,7 +188,13 @@ if __name__ == "__main__":
 
 ## 质量检查
 
-交付前运行脚本，并检查：
+交付前运行脚本，并用 `scripts/audit_figure.py` 做一次机械检查：
+
+```bash
+python scientific-plotting/scripts/audit_figure.py path/to/figure.png path/to/figure.pdf
+```
+
+然后人工检查：
 
 - `png` 和 `pdf/svg` 均生成成功。
 - 坐标轴有变量名和单位。
